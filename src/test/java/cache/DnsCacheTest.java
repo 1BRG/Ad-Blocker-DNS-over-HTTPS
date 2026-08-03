@@ -2,8 +2,13 @@ package cache;
 
 import org.example.cache.DnsCache;
 import org.example.core.DnsRecord;
+import org.example.logging.CacheLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -11,17 +16,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class DnsCacheTest {
 
-    private String domain;
+    private String domain = "google.com";
+
+    @Mock
+    private CacheLogger logger;
+
+    @InjectMocks
     private DnsCache dohCache;
-    @BeforeEach
-    void setUp()
-    {
-        domain = "google.com";
-        dohCache = new DnsCache();
-    }
 
     @Test
     void getRecords_NotCachedDomain_ShouldReturnNull()
@@ -29,6 +36,8 @@ public class DnsCacheTest {
         List<DnsRecord> result = dohCache.getRecords(domain, DnsRecord.RecordType.A);
 
         assertNull(result);
+        String expectedLog = String.format("[MISS] %s (%s).", domain, DnsRecord.RecordType.A);
+        verify(logger, times(1)).log(expectedLog);
     }
 
     @Test
@@ -39,6 +48,7 @@ public class DnsCacheTest {
         List<DnsRecord> result = dohCache.getRecords(domain, DnsRecord.RecordType.A);
 
         assertEquals(records, result);
+        String expectedLog = String.format("[HIT] %s (%s). Returning %d records.", domain, DnsRecord.RecordType.A, records.size());
     }
 
     @Test
@@ -49,6 +59,7 @@ public class DnsCacheTest {
         List<DnsRecord> result = dohCache.getRecords(domain, DnsRecord.RecordType.A);
 
         assertNull(result);
+        String expectedLog = String.format("[EXPIRED] %s (%s).", domain, DnsRecord.RecordType.A);
     }
 
 }
