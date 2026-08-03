@@ -1,7 +1,9 @@
 package org.example.filter;
 
+import org.example.core.DnsRecord;
 import org.example.provider.BlocklistProvider;
 
+import java.util.List;
 import java.util.Set;
 
 public class DomainFilter {
