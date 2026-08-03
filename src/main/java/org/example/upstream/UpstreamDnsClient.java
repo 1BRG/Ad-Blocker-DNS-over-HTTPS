@@ -3,11 +3,12 @@ package org.example.upstream;
 import org.example.core.DnsRecord;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UpstreamDnsClient {
-    public List<DnsRecord> fetch(String domain, DnsRecord.RecordType type) throws RuntimeException {
+    public List<DnsRecord> fetch(String domain, DnsRecord.RecordType type) throws UnknownHostException {
         List<DnsRecord> results = new ArrayList<>();
 
         try {
@@ -20,7 +21,7 @@ public class UpstreamDnsClient {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("IP for " + domain + " not found");
+            throw new UnknownHostException("IP for " + domain + " not found");
         }
 
         return results;

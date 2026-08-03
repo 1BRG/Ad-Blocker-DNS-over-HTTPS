@@ -28,7 +28,7 @@ public class Main {
         UpstreamDnsClient upstreamDnsClient = new UpstreamDnsClient();
         AdBlockResolver adBlockResolver = new AdBlockResolver(domainFilter, dnsCache, upstreamDnsClient);
         try {
-            adBlockResolver.resolveDomain("google.com", DnsRecord.RecordType.A);
+            adBlockResolver.resolveDomain("pbinfo.ro", DnsRecord.RecordType.A);
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
