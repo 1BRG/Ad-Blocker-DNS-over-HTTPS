@@ -7,6 +7,7 @@ import org.example.filter.DomainFilter;
 import org.example.logging.CacheLogger;
 import org.example.provider.BlocklistProvider;
 import org.example.provider.file.FileProvider;
+import org.example.server.DohServer;
 import org.example.upstream.UpstreamDnsClient;
 
 import java.net.UnknownHostException;
@@ -27,10 +28,8 @@ public class Main {
         DnsCache dnsCache = new DnsCache(cacheLogger);
         UpstreamDnsClient upstreamDnsClient = new UpstreamDnsClient();
         AdBlockResolver adBlockResolver = new AdBlockResolver(domainFilter, dnsCache, upstreamDnsClient);
-        try {
-            adBlockResolver.resolveDomain("pbinfo.ro", DnsRecord.RecordType.A);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
+
+        DohServer server = new DohServer(adBlockResolver);
+        server.start(8080);
     }
 }
