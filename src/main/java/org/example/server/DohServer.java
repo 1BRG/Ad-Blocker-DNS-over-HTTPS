@@ -31,6 +31,7 @@ public class DohServer {
     public void start(int port) {
 
         Javalin app = Javalin.create(config -> {
+            config.concurrency.useVirtualThreads = true;
             config.routes.apiBuilder(() -> {
                 get("/dns-query", ctx -> handleDohRequest(ctx, false));
                 post("/dns-query", ctx -> handleDohRequest(ctx, true));
@@ -40,7 +41,7 @@ public class DohServer {
         app.start(port);
     }
 
-    private void handleDohRequest(Context ctx, boolean isPost) {
+    void handleDohRequest(Context ctx, boolean isPost) {
         if (isPost && !"application/dns-message".equals(ctx.contentType())) {
             ctx.status(415).result("Unsupported Media Type");
             return;

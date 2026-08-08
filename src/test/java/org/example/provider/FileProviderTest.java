@@ -1,4 +1,4 @@
-package provider;
+package org.example.provider;
 
 import org.example.provider.file.FileProvider;
 import org.junit.jupiter.api.Test;

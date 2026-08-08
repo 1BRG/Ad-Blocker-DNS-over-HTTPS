@@ -1,4 +1,4 @@
-package config;
+package org.example.config;
 
 import org.example.config.DBConfig;
 import io.github.cdimascio.dotenv.Dotenv;

@@ -1,4 +1,4 @@
-package cache;
+package org.example.cache;
 
 import org.example.cache.DnsCache;
 import org.example.core.DnsRecord;

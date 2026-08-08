@@ -1,4 +1,4 @@
-package filter;
+package org.example.filter;
 
 import org.example.filter.DomainFilter;
 import org.example.provider.BlocklistProvider;

@@ -1,4 +1,4 @@
-package core;
+package org.example.core;
 
 import org.example.cache.DnsCache;
 import org.example.core.AdBlockResolver;
