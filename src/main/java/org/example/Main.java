@@ -13,6 +13,9 @@ import org.example.upstream.UpstreamDnsClient;
 import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -28,6 +31,15 @@ public class Main {
         DnsCache dnsCache = new DnsCache(cacheLogger);
         UpstreamDnsClient upstreamDnsClient = new UpstreamDnsClient();
         AdBlockResolver adBlockResolver = new AdBlockResolver(domainFilter, dnsCache, upstreamDnsClient);
+
+
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(runnable -> {
+            Thread thread = new Thread(runnable, "BlockList updater");
+            thread.setDaemon(true);
+            return thread;
+        });
+
+        scheduler.scheduleAtFixedRate(domainFilter::reloadBlockList, 24, 24, TimeUnit.HOURS);
 
         DohServer server = new DohServer(adBlockResolver);
         server.start(8080);

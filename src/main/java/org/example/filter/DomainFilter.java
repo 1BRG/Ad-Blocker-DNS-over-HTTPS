@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 public class DomainFilter {
-    private BlocklistProvider blocklistProvider;
-    private final Set<String> blockList;
+    private final BlocklistProvider blocklistProvider;
+    volatile private Set<String> blockList;
 
     public DomainFilter(BlocklistProvider blocklistProvider)
     {
@@ -19,6 +19,19 @@ public class DomainFilter {
     public boolean isBlocked(String domain)
     {
         return blockList.contains(domain);
+    }
+
+    public void reloadBlockList()
+    {
+        try {
+            Set<String> newBlockList = blocklistProvider.loadBlockedDomains();
+
+            this.blockList = newBlockList;
+        }
+        catch (Exception ignored)
+        {
+        }
+
     }
 
 }
